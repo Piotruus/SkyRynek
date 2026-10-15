@@ -1,30 +1,19 @@
-# SkyRynek 1.0.0 (Paper 1.21.4, Java 21)
+# Rynek 1.3.0 — hardening / Paper 1.21.4
 
-## Budowanie
-Zainstaluj JDK 21 i Apache Maven, a następnie w folderze projektu uruchom `mvn clean package`.
-Wynik: `target/SkyRynek-1.0.0.jar` (biblioteka SQLite zostaje dołączona do JAR).
+## Build
+GitHub Actions workflow: `.github/workflows/build.yml`. Build using Java 21, `mvn -B clean package`.
 
-## Instalacja
-1. Zainstaluj Paper 1.21.4, Vault oraz **plugin ekonomii obsługujący Vault** (sam Vault nie przechowuje pieniędzy).
-2. Skopiuj wygenerowany JAR do `plugins/` i uruchom serwer.
-3. Ustaw w LuckPerms: VIP `skyrynek.limit.6`, MVIP `skyrynek.limit.10`, FLOWY `skyrynek.limit.15`.
-4. Zmieniaj `config.yml` i `messages.yml`, a następnie wykonaj restart (lub `/ah reload`).
+## Zmiany
+- Zabezpieczenie przed równoległym zakupem i wypłatą przez blokady w pamięci (główny wątek Bukkit).
+- Zakup zapisuje `PAYMENT_REVIEW` przed wywołaniem Vault; po udanej płatności zapisuje atomowo dostawę, należność sprzedawcy, historię i status SOLD.
+- Zakupione przedmioty trafiają do trwałego schowka `/ah collect` (w dolnym GUI przycisk HOPPER), nie bezpośrednio do ekwipunku.
+- Wypłaty i odbiory oznaczają stan przejściowy przed zewnętrznym efektem; niepewne przypadki są wstrzymywane zamiast automatycznego ponawiania.
+- Blokada shift-click, double-click, drag w GUI.
 
-## Komendy
-- `/ah` i `/rynek` — menu startowe
-- `/ah open` / `/rynek otworz` — rynek
-- `/ah sell <price>` / `/rynek sprzedaj <cena>` — sprzedaż trzymanego stacka
-- `/ah search <text>` / `/rynek szukaj <tekst>` — wyszukiwanie
-- `/ah my` / `/rynek moje` — własne aukcje
-- `/ah expired` / `/rynek wygasle` — wygasłe
-- `/ah collect` / `/rynek odbierz` — zwroty do odbioru
-- `/ah history` / `/rynek historia` — historia ostatnich transakcji
-- `/ah player <nick>` / `/rynek gracz <nick>` — oferty gracza
-- `/ah cancel <id>` / `/rynek anuluj <id>` — anulowanie własnej aukcji
-- `/ah help` / `/rynek pomoc` — pomoc
-- `/ah admin` / `/rynek admin` — podgląd panelu admina
-- `/ah remove <id>` / `/rynek usun <id>` — usunięcie aukcji przez admina
-- `/ah reload` / `/rynek przeladuj` — przeładowanie plików
+## WAŻNE — ograniczenia
+**To NIE jest gwarancja 100% bezpieczeństwa ani kod zweryfikowany na działającym serwerze.** SQLite nie może atomowo zatwierdzić operacji w zewnętrznym dostawcy Vault ani przekazania przedmiotu do ekwipunku Bukkit. Awaria w krytycznej chwili może wymagać ręcznej weryfikacji. `payment_reviews` oraz aukcje `PAYMENT_REVIEW`, wypłaty `delivered=2/3`, dostawy `status=REVIEW/CLAIMING` wymagają porównania logów, salda i stanu gracza; **nie resetuj tych statusów w ciemno**. Zrób kopię `auctions.db` przed aktualizacją.
 
-## Uwaga techniczna
-To projekt źródłowy, **nieprzetestowany na działającym serwerze**. Nie deklaruje pełnej odporności na awarie między zapisem transakcji a operacją ekonomii Vault. Przed użyciem produkcyjnym wykonaj testy i kopię zapasową bazy.
+## Przed wdrożeniem
+1. Przetestuj kompilację na GitHub Actions (tu nie przeprowadzono kompilacji).
+2. Na osobnym serwerze przetestuj zakup dwóch graczy naraz, pełny ekwipunek, wyjście i restart w trakcie transakcji, wygaśnięcie, wycofanie aukcji, brak Vault i dostawcę ekonomii offline.
+3. Nie używaj na serwerze produkcyjnym przed audytem i testami. Zrób kopię SQLite i danych graczy.

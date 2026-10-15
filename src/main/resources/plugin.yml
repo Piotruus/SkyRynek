@@ -1,8 +1,8 @@
-name: SkyRynek
-version: 1.0.0
+name: Rynek
+version: 1.3.0
 main: pl.skyrynek.SkyRynek
 api-version: '1.21.4'
-author: SkyRynek
+author: Rynek
 softdepend: [Vault, LuckPerms]
 commands:
   ah:

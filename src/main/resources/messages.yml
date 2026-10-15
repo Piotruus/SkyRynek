@@ -2,3 +2,5 @@ sale-title: '&a&lTwój przedmiot został sprzedany!'
 sale-subtitle: '&a+%price%$'
 buy-title: '&a&lZakupiono przedmiot!'
 buy-subtitle: '&a-%price%$'
+
+# Wiadomosci TITLE mozna zmieniac i przeladowac /ah reload.
