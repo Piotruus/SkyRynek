@@ -1,0 +1,11 @@
+auction-hours: 24
+min-price: 1
+max-price: 1000000000
+max-item-stack: 64
+limits:
+  default: 3
+  vip: 6
+  mvip: 10
+  flowy: 15
+# Vault musi mieć aktywnego dostawcę ekonomii.
+# Ustaw permisje skyrynek.limit.6 / .10 / .15 rangom w LuckPerms.

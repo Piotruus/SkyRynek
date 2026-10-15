@@ -1,0 +1,24 @@
+name: SkyRynek
+version: 1.0.0
+main: pl.skyrynek.SkyRynek
+api-version: '1.21.4'
+author: SkyRynek
+softdepend: [Vault, LuckPerms]
+commands:
+  ah:
+    description: Auction House (English)
+    usage: /ah
+  rynek:
+    description: Rynek graczy (Polski)
+    usage: /rynek
+permissions:
+  skyrynek.use:
+    default: true
+  skyrynek.admin:
+    default: op
+  skyrynek.limit.6:
+    default: false
+  skyrynek.limit.10:
+    default: false
+  skyrynek.limit.15:
+    default: false
